@@ -1,14 +1,17 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const process = require('process');
+const mongoose = require('mongoose');
+const ticketsRouter = require('./routers/tickets-router');
 require('dotenv').config();
 
-const { SERVER_DOMAIN, SERVER_PROTOCOL, SERVER_PORT } = process.env;
-const constantsConfiguredInEnvFile = SERVER_DOMAIN && SERVER_PROTOCOL && SERVER_PORT;
+const { SERVER_DOMAIN, SERVER_PROTOCOL, SERVER_PORT, DB_CONNECTION } = process.env;
+const constantsConfiguredInEnvFile = SERVER_DOMAIN && SERVER_PROTOCOL && SERVER_PORT && DB_CONNECTION;
 
 try {
   if (!constantsConfiguredInEnvFile) {
-    throw new Error('Project constants are not defined. \n\t Define constants in ".env"');
+    throw new Error('Project constants are not defined.\n\t Define constants in ".env"');
   }
 
   const app = express();
@@ -17,17 +20,24 @@ try {
   app.use(morgan('tiny'));
   app.use(cors());
 
-  app.get('/', (req, res) => {
-    res.send('Hello!');
-  });
+  app.use('/tickets', ticketsRouter);
 
-  app.listen(SERVER_PORT, (err) => {
+  const connection = mongoose.connect(DB_CONNECTION, (err) => {
     if (err) {
-      console.error('Server failed to start!');
+      throw err.message;
     }
 
-    console.log(`Server is up and running on port: ${SERVER_PORT}`);
+    console.log('Connected to MongoDB Atlass');
+
+    app.listen(SERVER_PORT, (err) => {
+      if (err) {
+        console.error('Server failed to start!');
+      }
+
+      console.log(`Server is up and running on port: ${SERVER_PORT}`);
+    });
   });
-} catch (error) {
-  console.error(error.message);
+
+} catch (err) {
+  console.error(err.message);
 }
