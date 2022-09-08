@@ -1,3 +1,5 @@
+const TicketModel = require("../models/ticket-model");
+
 const database = {
   tickets: [
     {
@@ -55,8 +57,9 @@ const database = {
   ]
 };
 
-const fetchAll = (req, res) => {
-  res.status(200).send(database.tickets);
+const fetchAll = async (req, res) => {
+  const ticketDocuments = await TicketModel.find();
+  res.status(200).send(ticketDocuments);
 };
 
 const fetchById = (req, res) => {
@@ -76,7 +79,7 @@ const fetchById = (req, res) => {
   }
 };
 
-const create = (req, res) => {
+const create = async (req, res) => {
   const newTicketData = req.body;
 
   try {
@@ -91,12 +94,7 @@ const create = (req, res) => {
       status: 400
     });
 
-    const newTicket = {
-      id: 10,
-      ...newTicketData
-    };
-
-    database.tickets.push(newTicket);
+    const newTicket = await TicketModel.create({ ...newTicketData });
 
     res.status(201).send(newTicket);
   } catch ({ status, message }) {
