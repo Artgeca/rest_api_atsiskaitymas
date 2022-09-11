@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const ticketSchema = Schema({
+const ticketSchema = new Schema({
   typeId: {
     type: Number,
     required: true

@@ -59,23 +59,23 @@ const database = {
 
 const fetchAll = async (req, res) => {
   const ticketDocuments = await TicketModel.find();
-  res.status(200).send(ticketDocuments);
+  res.status(200).json(ticketDocuments);
 };
 
-const fetchById = (req, res) => {
-  const id = +req.params.id;
+const fetchById = async (req, res) => {
+  const id = req.params.id;
 
   try {
-    const ticket = database.tickets.find(x => x.id === id);
+    const ticket = await TicketModel.findById(id);
 
-    if (!ticket) throw ({
+    if (ticket === null) throw ({
       message: `Ticket with id: '${id}' was not found`,
       status: 404
     });
 
-    res.status(200).send(ticket);
+    res.status(200).json(ticket);
   } catch ({ status, message }) {
-    res.status(status).send({ message });
+    res.status(status).json({ message });
   }
 };
 
@@ -96,9 +96,9 @@ const create = async (req, res) => {
 
     const newTicket = await TicketModel.create({ ...newTicketData });
 
-    res.status(201).send(newTicket);
+    res.status(201).json(newTicket);
   } catch ({ status, message }) {
-    res.status(status).send({ message });
+    res.status(status).json({ message });
   }
 };
 
