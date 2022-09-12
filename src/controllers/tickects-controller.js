@@ -82,17 +82,13 @@ const checkIfValidData = (ticketData) => {
   if (isValidData(ticketData)) throw createBadTicketDataError(ticketData);
 };
 
-const removeEmptyProps = (obj) => {
-  Object.entries(obj).reduce((prevResult, [key, value]) => {
-    if (value !== undefined) {
-      prevResult[key] = value;
-    }
+const removeEmptyProps = (obj) => Object.entries(obj).reduce((prevResult, [key, value]) => {
+  if (value !== undefined) {
+    prevResult[key] = value;
+  }
 
-    console.log(prevResult);
-
-    return prevResult;
-  }, {});
-};
+  return prevResult;
+}, {});
 
 const fetchAll = async (req, res) => {
   try {
@@ -161,7 +157,7 @@ const replace = async (req, res) => {
 const update = async (req, res) => {
   const id = req.params.id;
   const { typeId, price, from, to } = req.body;
-  const newTicketData = { typeId, price, from, to };
+  const newTicketData = removeEmptyProps({ typeId, price, from, to });
 
   try {
     checkIfValidId(id);
