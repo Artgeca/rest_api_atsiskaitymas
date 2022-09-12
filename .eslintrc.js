@@ -13,5 +13,6 @@ module.exports = {
         "import/prefer-default-export": [0],
         "no-unused-vars": [1],
         "no-underscore-dangle": [0],
+        "quotes": [1, "single"]
     }
 };
