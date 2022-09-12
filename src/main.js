@@ -1,10 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
-const process = require('process');
 const mongoose = require('mongoose');
+const process = require('process');
 const ticketsRouter = require('./routers/tickets-router');
-require('dotenv').config();
 
 const { SERVER_DOMAIN, SERVER_PROTOCOL, SERVER_PORT, DB_CONNECTION } = process.env;
 const constantsConfiguredInEnvFile = SERVER_DOMAIN && SERVER_PROTOCOL && SERVER_PORT && DB_CONNECTION;
@@ -22,7 +22,7 @@ try {
 
   app.use('/tickets', ticketsRouter);
 
-  const connection = mongoose.connect(DB_CONNECTION, (err) => {
+  mongoose.connect(DB_CONNECTION, (err) => {
     if (err) {
       throw err.message;
     }
