@@ -1,5 +1,5 @@
 const { removeEmptyProps, validMongoObjectId } = require('../helpers');
-const { sendErrorResponse, createNotFoundError } = require('../helpers/error');
+const { sendErrorResponse, createNotFoundError, createBadDataError } = require('../helpers/error');
 const TicketModel = require('../models/ticket-model');
 
 const database = {
@@ -65,10 +65,7 @@ const isValidData = ({ typeId, price, from, to }) => (typeId === undefined || ty
   || to === undefined || typeof to !== 'string'
 );
 
-const createBadTicketDataError = () => ({
-  message: 'Ticket data is invalid!',
-  status: 400
-});
+const createBadTicketDataError = () => createBadDataError('Ticket data is invalid!');
 
 const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
 
@@ -101,7 +98,7 @@ const create = async (req, res) => {
   const newTicketData = req.body;
 
   try {
-    checkIfValidData(newTicketData);
+    await TicketModel.validateTicket(newTicketData);
 
     const newTicket = await TicketModel.create({ ...newTicketData });
 
@@ -116,7 +113,7 @@ const replace = async (req, res) => {
   try {
     if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
 
-    checkIfValidData(newTicketData);
+    await TicketModel.validateTicket(newTicketData);
 
     const ticket = await TicketModel.findByIdAndUpdate(id, newTicketData, { new: true, runValidators: true });
 
@@ -133,6 +130,8 @@ const update = async (req, res) => {
 
   try {
     if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
+
+    await TicketModel.validateTicketUpdate(newTicketData);
 
     const ticket = await TicketModel.findByIdAndUpdate(id, newTicketData, { new: true });
 
