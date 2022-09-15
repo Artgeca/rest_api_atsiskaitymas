@@ -59,19 +59,7 @@ const database = {
   ]
 };
 
-const isValidData = ({ typeId, price, from, to }) => (typeId === undefined || typeof typeId !== 'number'
-  || price === undefined || typeof price !== 'number' || price < 0
-  || from === undefined || typeof from !== 'string'
-  || to === undefined || typeof to !== 'string'
-);
-
-const createBadTicketDataError = () => createBadDataError('Ticket data is invalid!');
-
 const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
-
-const checkIfValidData = (ticketData) => {
-  if (isValidData(ticketData)) throw createBadTicketDataError(ticketData);
-};
 
 const fetchAll = async (req, res) => {
   try {
