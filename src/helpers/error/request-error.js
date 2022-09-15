@@ -6,7 +6,7 @@ class RequestError extends Error {
     if (!isStatusCode(statusCode)) {
       throw TypeError(`Incorrect status code '${statusCode}'`);
     }
-    this.status = statusCode;
+    this.statusCode = statusCode;
   }
 }
 

@@ -1,6 +1,5 @@
-const mongoose = require('mongoose');
-const { removeEmptyProps } = require('../helpers');
-const { sendErrorResponse } = require('../helpers/error');
+const { removeEmptyProps, validMongoObjectId } = require('../helpers');
+const { sendErrorResponse, createNotFoundError } = require('../helpers/error');
 const TicketModel = require('../models/ticket-model');
 
 const database = {
@@ -71,14 +70,7 @@ const createBadTicketDataError = () => ({
   status: 400
 });
 
-const createTicketNotFoundError = (ticketId) => ({
-  message: `Ticket with id: '${ticketId}' not found`,
-  status: 404
-});
-
-const checkIfValidId = (id) => {
-  if (!mongoose.isValidObjectId(id)) throw ({ message: `Id: '${id}' is not valid!`, status: 404 });
-};
+const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
 
 const checkIfValidData = (ticketData) => {
   if (isValidData(ticketData)) throw createBadTicketDataError(ticketData);
@@ -95,7 +87,7 @@ const fetchById = async (req, res) => {
   const id = req.params.id;
 
   try {
-    checkIfValidId(id);
+    if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
 
     const ticket = await TicketModel.findById(id);
 
@@ -122,7 +114,7 @@ const replace = async (req, res) => {
   const newTicketData = req.body;
 
   try {
-    checkIfValidId(id);
+    if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
 
     checkIfValidData(newTicketData);
 
@@ -140,7 +132,7 @@ const update = async (req, res) => {
   const newTicketData = removeEmptyProps({ typeId, price, from, to });
 
   try {
-    checkIfValidId(id);
+    if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
 
     const ticket = await TicketModel.findByIdAndUpdate(id, newTicketData, { new: true });
 
@@ -155,7 +147,7 @@ const remove = async (req, res) => {
   console.log(id);
 
   try {
-    checkIfValidId(id);
+    if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
 
     const ticket = await TicketModel.findByIdAndDelete(id);
 
