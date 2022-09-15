@@ -1,63 +1,6 @@
 const { removeEmptyProps, validMongoObjectId } = require('../helpers');
-const { sendErrorResponse, createNotFoundError, createBadDataError } = require('../helpers/error');
+const { sendErrorResponse, createNotFoundError } = require('../helpers/error');
 const TicketModel = require('../models/ticket-model');
-
-const database = {
-  tickets: [
-    {
-      id: 1,
-      typeId: 1,
-      price: 10.99,
-      from: 'Kaunas',
-      to: 'Vilnius'
-    },
-    {
-      id: 2,
-      typeId: 2,
-      price: 13.99,
-      from: 'Kaunas',
-      to: 'Klaipėda'
-    },
-    {
-      id: 3,
-      typeId: 3,
-      price: 45,
-      from: 'Kaunas',
-      to: 'Nida'
-    },
-    {
-      id: 4,
-      typeId: 3,
-      price: 50.99,
-      from: 'Vilnius',
-      to: 'Palanga'
-    },
-    {
-      id: 5,
-      typeId: 1,
-      price: 18.99,
-      from: 'Klaipėda',
-      to: 'Vilnius'
-    }
-  ],
-  types: [
-    {
-      id: 1,
-      title: 'Bus',
-      img: 'https://www.sustainable-bus.com/wp-content/uploads/2019/12/scania-bus4.jpg'
-    },
-    {
-      id: 2,
-      title: 'Train',
-      img: 'https://upload.wikimedia.org/wikipedia/commons/4/44/Train_Kaunas-Vilna_in_Kaunas_Skoda.jpg'
-    },
-    {
-      id: 3,
-      title: 'Plane',
-      img: 'https://pbs.twimg.com/media/EECH7MtWsAAnznl.jpg'
-    }
-  ]
-};
 
 const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
 
@@ -131,7 +74,6 @@ const update = async (req, res) => {
 
 const remove = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
 
   try {
     if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);

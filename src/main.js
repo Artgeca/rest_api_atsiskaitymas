@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const process = require('process');
 const ticketsRouter = require('./routers/tickets-router');
+const typesRouter = require('./routers/types-router');
 
 const { SERVER_DOMAIN, SERVER_PROTOCOL, SERVER_PORT, DB_CONNECTION } = process.env;
 const constantsConfiguredInEnvFile = SERVER_DOMAIN && SERVER_PROTOCOL && SERVER_PORT && DB_CONNECTION;
@@ -21,6 +22,7 @@ try {
   app.use(cors());
 
   app.use('/tickets', ticketsRouter);
+  app.use('/types', typesRouter);
 
   mongoose.connect(DB_CONNECTION, (err) => {
     if (err) {
