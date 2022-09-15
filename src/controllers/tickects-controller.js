@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const { removeEmptyProps } = require('../helpers');
+const { sendErrorResponse } = require('../helpers/error');
 const TicketModel = require('../models/ticket-model');
 
 const database = {
@@ -87,9 +88,7 @@ const fetchAll = async (req, res) => {
   try {
     const ticketDocuments = await TicketModel.find();
     res.status(200).json(ticketDocuments);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+  } catch (err) { sendErrorResponse(err, res); }
 };
 
 const fetchById = async (req, res) => {
@@ -103,15 +102,7 @@ const fetchById = async (req, res) => {
     if (ticket === null) throw createTicketNotFoundError(id);
 
     res.status(200).json(ticket);
-  } catch (err) {
-    const { status, message } = err;
-
-    if (status && message) {
-      res.status(status).json({ message });
-    } else {
-      res.status(400).json({ message: err.message });
-    }
-  }
+  } catch (err) { sendErrorResponse(err, res); }
 };
 
 const create = async (req, res) => {
@@ -123,9 +114,7 @@ const create = async (req, res) => {
     const newTicket = await TicketModel.create({ ...newTicketData });
 
     res.status(201).json(newTicket);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
+  } catch (err) { sendErrorResponse(err, res); }
 };
 
 const replace = async (req, res) => {
@@ -142,9 +131,7 @@ const replace = async (req, res) => {
     if (ticket === null) throw createTicketNotFoundError(id);
 
     res.status(200).json(ticket);
-  } catch ({ status, message }) {
-    res.status(status).json({ message });
-  }
+  } catch (err) { sendErrorResponse(err, res); }
 };
 
 const update = async (req, res) => {
@@ -160,15 +147,7 @@ const update = async (req, res) => {
     if (ticket === null) throw createTicketNotFoundError(id);
 
     res.status(200).json(ticket);
-  } catch (err) {
-    const { message, status } = err;
-
-    if (status && message) {
-      res.status(status).json({ message });
-    } else {
-      res.status(400).json({ message: err.message });
-    }
-  }
+  } catch (err) { sendErrorResponse(err, res); }
 };
 
 const remove = async (req, res) => {
@@ -183,14 +162,7 @@ const remove = async (req, res) => {
     if (ticket === null) throw createTicketNotFoundError(id);
 
     res.status(200).json(ticket);
-  } catch (err) {
-    const { status, message } = err;
-    if (status && message) {
-      res.status(status).json({ message });
-    } else {
-      res.status(400).json({ message: err.message });
-    }
-  }
+  } catch (err) { sendErrorResponse(err, res); }
 };
 
 module.exports = {
