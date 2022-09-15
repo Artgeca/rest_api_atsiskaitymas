@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { removeEmptyProps } = require('../helpers');
 const TicketModel = require('../models/ticket-model');
 
 const database = {
@@ -81,14 +82,6 @@ const checkIfValidId = (id) => {
 const checkIfValidData = (ticketData) => {
   if (isValidData(ticketData)) throw createBadTicketDataError(ticketData);
 };
-
-const removeEmptyProps = (obj) => Object.entries(obj).reduce((prevResult, [key, value]) => {
-  if (value !== undefined) {
-    prevResult[key] = value;
-  }
-
-  return prevResult;
-}, {});
 
 const fetchAll = async (req, res) => {
   try {
