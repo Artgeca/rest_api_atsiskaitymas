@@ -1,9 +1,12 @@
 const { Schema, model } = require('mongoose');
 const yup = require('yup');
+const { validMongoObjectId } = require('../helpers');
+const TypeModel = require('./type-model');
 
 const ticketSchema = new Schema({
   typeId: {
-    type: Number,
+    type: Schema.Types.ObjectId,
+    ref: 'Type',
     required: true
   },
   price: {
@@ -24,8 +27,14 @@ const ticketSchema = new Schema({
 
 const ticketValidationSchema = yup.object().shape({
   typeId: yup
-    .number().typeError('Ticket.typeId must be a string')
-    .required('Ticket.typeId is required'),
+    .string().typeError('Ticket.typeId must be a string')
+    .required('Ticket.typeId is required')
+    .test('is-valid-id', 'Ticket.typeId id not found', (typeId) => validMongoObjectId(typeId))
+    .test('is-type', 'Ticket.typeId id not found', async (typeId) => {
+      const type = await TypeModel.findById(typeId);
+
+      return type !== null;
+    }),
   price: yup
     .number().typeError('Ticket.price must be a number')
     .required('Ticket.price is required')
