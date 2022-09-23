@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { fetchAll, fetchById, create, replace, update, remove } = require('../controllers/tickects-controller');
+const { fetchAll, fetchById, create, replace, update, remove } = require('../../controllers/tickects-controller');
 
 const ticketsRouter = Router();
 
