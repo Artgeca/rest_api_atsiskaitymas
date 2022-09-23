@@ -5,19 +5,23 @@ const TicketModel = require('../models/ticket-model');
 const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
 
 const fetchAll = async (req, res) => {
+  const { joinBy } = req.query;
+
   try {
-    const ticketDocuments = await TicketModel.find();
+    const ticketDocuments = joinBy ? await TicketModel.find().populate('typeId') : await TicketModel.find();
+
     res.status(200).json(ticketDocuments);
   } catch (err) { sendErrorResponse(err, res); }
 };
 
 const fetchById = async (req, res) => {
   const id = req.params.id;
+  const { joinBy } = req.query;
 
   try {
     if (!validMongoObjectId(id)) throw createTicketNotFoundError(id);
 
-    const ticket = await TicketModel.findById(id);
+    const ticket = joinBy ? await TicketModel.findById(id).populate('typeId') : await TicketModel.findById(id);
 
     if (ticket === null) throw createTicketNotFoundError(id);
 
