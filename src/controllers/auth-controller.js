@@ -29,7 +29,7 @@ const register = async (req, res) => {
   const requestData = req.body;
 
   try {
-    await UserModel.validateData(requestData);
+    await UserModel.validateUser(requestData);
     const { email, password, } = requestData;
 
     const userDoc = await UserModel.create({
