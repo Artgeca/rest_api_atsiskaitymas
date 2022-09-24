@@ -6,8 +6,8 @@ const mongoose = require('mongoose');
 const process = require('process');
 const apiRouter = require('./routers/api-router');
 
-const { SERVER_DOMAIN, SERVER_PROTOCOL, SERVER_PORT, DB_CONNECTION } = process.env;
-const constantsConfiguredInEnvFile = SERVER_DOMAIN && SERVER_PROTOCOL && SERVER_PORT && DB_CONNECTION;
+const { SERVER_DOMAIN, SERVER_PROTOCOL, SERVER_PORT, DB_CONNECTION, JWT_SECRET } = process.env;
+const constantsConfiguredInEnvFile = SERVER_DOMAIN && SERVER_PROTOCOL && SERVER_PORT && DB_CONNECTION && JWT_SECRET;
 
 try {
   if (!constantsConfiguredInEnvFile) {
