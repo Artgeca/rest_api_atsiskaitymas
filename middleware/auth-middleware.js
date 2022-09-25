@@ -22,7 +22,6 @@ const requireAuth = async (req, res, next) => {
         throw createUnauthorizedError('Unauthorized. User does not exist.');
       }
       req.authUser = userDoc;
-      console.log(req.authUser);
 
       next();
     } catch (error) {

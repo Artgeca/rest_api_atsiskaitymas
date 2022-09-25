@@ -1,10 +1,10 @@
 const { Router } = require('express');
-const { requireAuth } = require('../../../middleware/auth-middleware');
+const { requireAdmin } = require('../../../middleware/auth-middleware');
 const { fetchAll, create, fetchById, replace, update, remove } = require('../../controllers/users-controller');
 
 const usersRouter = Router();
 
-usersRouter.use(requireAuth);
+usersRouter.use(requireAdmin);
 
 usersRouter.get('/', fetchAll);
 
