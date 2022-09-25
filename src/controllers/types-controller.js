@@ -1,13 +1,14 @@
 const { validMongoObjectId, removeEmptyProps } = require('../helpers');
 const { sendErrorResponse, createNotFoundError } = require('../helpers/error');
 const TypeModel = require('../models/type-model');
+const createTypeViewModel = require('../view-models/create-type-view-model');
 
 const createTypeNotFoundError = (typeId) => createNotFoundError(`Type with id: '${typeId}' not found`);
 
 const fetchAll = async (req, res) => {
   try {
     const typeDocuments = await TypeModel.find();
-    res.status(200).json(typeDocuments);
+    res.status(200).json(typeDocuments.map(type => createTypeViewModel(type)));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -21,7 +22,7 @@ const fetchById = async (req, res) => {
 
     if (type === null) throw createTypeNotFoundError(id);
 
-    res.status(200).json(type);
+    res.status(200).json(createTypeViewModel(type));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -33,7 +34,7 @@ const create = async (req, res) => {
 
     const newType = await TypeModel.create({ ...newTypeData });
 
-    res.status(201).json(newType);
+    res.status(201).json(createTypeViewModel(newType));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -50,7 +51,7 @@ const replace = async (req, res) => {
 
     if (type === null) throw createTypeNotFoundError(id);
 
-    res.status(200).json(type);
+    res.status(200).json(createTypeViewModel(type));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -68,7 +69,7 @@ const update = async (req, res) => {
 
     if (type === null) throw createTypeNotFoundError(id);
 
-    res.status(200).json(type);
+    res.status(200).json(createTypeViewModel(type));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -82,7 +83,7 @@ const remove = async (req, res) => {
 
     if (type === null) throw createTypeNotFoundError(id);
 
-    res.status(200).json(type);
+    res.status(200).json(createTypeViewModel(type));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
