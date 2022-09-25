@@ -1,6 +1,7 @@
 const { removeEmptyProps, validMongoObjectId } = require('../helpers');
 const { sendErrorResponse, createNotFoundError } = require('../helpers/error');
 const TicketModel = require('../models/ticket-model');
+const createTicketViewModel = require('../view-models/create-ticket-view-model');
 
 const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
 
@@ -10,7 +11,7 @@ const fetchAll = async (req, res) => {
   try {
     const ticketDocuments = joinBy ? await TicketModel.find().populate('typeId') : await TicketModel.find();
 
-    res.status(200).json(ticketDocuments);
+    res.status(200).json(ticketDocuments.map(ticket => createTicketViewModel(ticket)));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -25,7 +26,7 @@ const fetchById = async (req, res) => {
 
     if (ticket === null) throw createTicketNotFoundError(id);
 
-    res.status(200).json(ticket);
+    res.status(200).json(createTicketViewModel(ticket));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -37,7 +38,7 @@ const create = async (req, res) => {
 
     const newTicket = await TicketModel.create({ ...newTicketData });
 
-    res.status(201).json(newTicket);
+    res.status(201).json(createTicketViewModel(newTicket));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -54,7 +55,7 @@ const replace = async (req, res) => {
 
     if (ticket === null) throw createTicketNotFoundError(id);
 
-    res.status(200).json(ticket);
+    res.status(200).json(createTicketViewModel(ticket));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -72,7 +73,7 @@ const update = async (req, res) => {
 
     if (ticket === null) throw createTicketNotFoundError(id);
 
-    res.status(200).json(ticket);
+    res.status(200).json(createTicketViewModel(ticket));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -86,7 +87,7 @@ const remove = async (req, res) => {
 
     if (ticket === null) throw createTicketNotFoundError(id);
 
-    res.status(200).json(ticket);
+    res.status(200).json(createTicketViewModel(ticket));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
