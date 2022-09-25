@@ -2,6 +2,8 @@ const RequestError = require('./request-error');
 
 const createBadDataError = (message) => new RequestError({ message, statusCode: 400 });
 const createNotFoundError = (message) => new RequestError({ message, statusCode: 404 });
+const createUnauthorizedError = (message) => new RequestError({ message, statusCode: 401 });
+const createForbiddenError = (message) => new RequestError({ message, statusCode: 403 });
 
 const sendErrorResponse = (err, res) => {
   let message;
@@ -23,5 +25,7 @@ const sendErrorResponse = (err, res) => {
 module.exports = {
   createBadDataError,
   createNotFoundError,
+  createUnauthorizedError,
+  createForbiddenError,
   sendErrorResponse
 };
