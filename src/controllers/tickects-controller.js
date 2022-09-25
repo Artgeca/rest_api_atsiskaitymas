@@ -1,6 +1,7 @@
 const { removeEmptyProps, validMongoObjectId } = require('../helpers');
 const { sendErrorResponse, createNotFoundError } = require('../helpers/error');
 const TicketModel = require('../models/ticket-model');
+const createTicketPopulatedViewModel = require('../view-models/create-ticket-populated-view-model');
 const createTicketViewModel = require('../view-models/create-ticket-view-model');
 
 const createTicketNotFoundError = (ticketId) => createNotFoundError(`Ticket with id: '${ticketId}' not found`);
@@ -11,7 +12,7 @@ const fetchAll = async (req, res) => {
   try {
     const ticketDocuments = joinBy ? await TicketModel.find().populate('typeId') : await TicketModel.find();
 
-    res.status(200).json(ticketDocuments.map(ticket => createTicketViewModel(ticket)));
+    res.status(200).json(joinBy ? ticketDocuments.map(ticket => createTicketPopulatedViewModel(ticket)) : ticketDocuments.map(ticket => createTicketViewModel(ticket)));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
@@ -26,7 +27,7 @@ const fetchById = async (req, res) => {
 
     if (ticket === null) throw createTicketNotFoundError(id);
 
-    res.status(200).json(createTicketViewModel(ticket));
+    res.status(200).json(joinBy ? createTicketPopulatedViewModel(ticket) : createTicketViewModel(ticket));
   } catch (err) { sendErrorResponse(err, res); }
 };
 
