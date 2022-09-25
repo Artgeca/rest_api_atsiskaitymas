@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { requireAdmin } = require('../../../middleware/auth-middleware');
+const { requireAdmin } = require('../../middleware/auth-middleware');
 const { fetchAll, create, fetchById, replace, update, remove } = require('../../controllers/users-controller');
 
 const usersRouter = Router();

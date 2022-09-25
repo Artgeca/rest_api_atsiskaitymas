@@ -1,6 +1,6 @@
-const { sendErrorResponse, createUnauthorizedError, createForbiddenError } = require('../src/helpers/error');
-const { decodeToken } = require('../src/helpers/token');
-const UserModel = require('../src/models/user-model');
+const { sendErrorResponse, createUnauthorizedError, createForbiddenError } = require('../helpers/error');
+const { decodeToken } = require('../helpers/token');
+const UserModel = require('../models/user-model');
 
 const requireAuth = async (req, res, next) => {
   try {
